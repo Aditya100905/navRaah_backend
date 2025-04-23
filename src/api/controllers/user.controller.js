@@ -1,4 +1,4 @@
-import { User } from "../models/user.model";
+import { User } from "../models/user.model.js";
 
 const userController = {
   // login
@@ -13,7 +13,7 @@ const userController = {
       if (!isPasswordCorrect) {
         return res.status(401).json({ message: "Invalid email or password" });
       }
-      const accessToken = user.generateAcessToken();
+      const accessToken = user.generateAccessToken();
       const refreshToken = user.generateRefreshToken();
       user.refreshToken = refreshToken;
       await user.save();
@@ -58,7 +58,8 @@ const userController = {
         password,
         phone,
       });
-      const accessToken = newUser.generateAcessToken();
+      console.log("reached access token");
+      const accessToken = newUser.generateAccessToken();
       const refreshToken = newUser.generateRefreshToken();
       newUser.refreshToken = refreshToken;
       await newUser.save();
@@ -68,6 +69,7 @@ const userController = {
         sameSite: "strict",
         maxAge: 30 * 24 * 60 * 60 * 1000,
       });
+      console.log("reached cokkie token");
       res.status(201).json({
         message: "User registered successfully",
         accessToken,
@@ -117,7 +119,7 @@ const userController = {
       if (!user) {
         return res.status(403).json({ message: "Invalid refresh token" });
       }
-      const newAccessToken = user.generateAcessToken();
+      const newAccessToken = user.generateAccessToken();
       res.status(200).json({
         message: "Access token refreshed successfully",
         accessToken: newAccessToken,
