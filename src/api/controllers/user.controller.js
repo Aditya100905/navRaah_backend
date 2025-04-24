@@ -58,7 +58,6 @@ const userController = {
         password,
         phone,
       });
-      console.log("reached access token");
       const accessToken = newUser.generateAccessToken();
       const refreshToken = newUser.generateRefreshToken();
       newUser.refreshToken = refreshToken;
@@ -69,7 +68,6 @@ const userController = {
         sameSite: "strict",
         maxAge: 30 * 24 * 60 * 60 * 1000,
       });
-      console.log("reached cokkie token");
       res.status(201).json({
         message: "User registered successfully",
         accessToken,
