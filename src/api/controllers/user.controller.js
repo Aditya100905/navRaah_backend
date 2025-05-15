@@ -1,4 +1,5 @@
 import { User } from "../models/user.model.js";
+import sendEmail from '../services/sendEmail.js';
 
 const userController = {
   // login
@@ -193,62 +194,68 @@ const userController = {
     }
   },
 
-  // forgot password
+  // forgot password for app
   forgotPassword: async (req, res) => {
-    const user = await User.findOne({ email: req.body.email });
-
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
-    }
-
-    const resetToken = user.getResetPasswordToken();
-    await user.save({ validateBeforeSave: false });
-
-    const resetUrl = `${process.env.FRONTEND_URL}/reset-password/${resetToken}`;
-    const message = `
-        <p>You requested a password reset.</p>
-        <p>Click <a href="${resetUrl}">here</a> to reset your password. This link will expire in 15 minutes.</p>
-    `;
-
     try {
-      await sendEmail({
-        to: user.email,
-        subject: "Password Reset",
-        message,
-      });
+      const user = await User.findOne({ email: req.body.email });
 
-      res.status(200).json({ message: "Email sent successfully" });
-    } catch (error) {
-      user.resetPasswordToken = undefined;
-      user.resetPasswordExpire = undefined;
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+
+      const resetToken = user.getResetPasswordToken();
       await user.save({ validateBeforeSave: false });
 
-      res.status(500).json({ message: "Failed to send email" });
+      const message = `Use this token to reset your password: ${resetToken}`;
+
+      try {
+        await sendEmail({
+          to: user.email,
+          subject: "Password Reset",
+          message: `<p>${message}</p>`,
+        });
+
+        res.status(200).json({ message: "Reset token generated", resetToken });
+      } catch (error) {
+        user.resetPasswordToken = undefined;
+        user.resetPasswordExpire = undefined;
+        await user.save({ validateBeforeSave: false });
+
+        res.status(500).json({ message: "Failed to send email" });
+      }
+    } catch (error) {
+      console.error("Error in forgotPassword:", error);
+      res.status(500).json({ message: "Internal server error" });
     }
   },
 
-  // resest password
+  // reset password for app
   resetPassword: async (req, res) => {
-    const hashedToken = crypto
-      .createHash("sha256")
-      .update(req.params.token)
-      .digest("hex");
+    try {
+      const hashedToken = crypto
+        .createHash("sha256")
+        .update(req.body.token)
+        .digest("hex");
 
-    const user = await User.findOne({
-      resetPasswordToken: hashedToken,
-      resetPasswordExpire: { $gt: Date.now() },
-    });
+      const user = await User.findOne({
+        resetPasswordToken: hashedToken,
+        resetPasswordExpire: { $gt: Date.now() },
+      });
 
-    if (!user) {
-      return res.status(400).json({ message: "Invalid or expired token" });
+      if (!user) {
+        return res.status(400).json({ message: "Invalid or expired token" });
+      }
+
+      user.password = req.body.password;
+      user.resetPasswordToken = undefined;
+      user.resetPasswordExpire = undefined;
+      await user.save();
+
+      res.status(200).json({ message: "Password has been reset successfully" });
+    } catch (error) {
+      console.error("Error in resetPassword:", error);
+      res.status(500).json({ message: "Internal server error" });
     }
-
-    user.password = req.body.password;
-    user.resetPasswordToken = undefined;
-    user.resetPasswordExpire = undefined;
-    await user.save();
-
-    res.status(200).json({ message: "Password has been reset" });
   },
 };
 
