@@ -29,7 +29,12 @@ app.use(cookieParser());
 
 // ROUTES
 import userRouter from './api/routes/user.routes.js';
+import busRouter from './api/routes/bus.routes.js'
+import routeRouter from './api/routes/route.routes.js'
+
 app.use('/api/users',userRouter);
+app.use('/api/bus', busRouter);
+app.use('/api/route', routeRouter);
 
 
 export { app };
