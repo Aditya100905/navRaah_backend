@@ -31,10 +31,12 @@ app.use(cookieParser());
 import userRouter from './api/routes/user.routes.js';
 import busRouter from './api/routes/bus.routes.js'
 import routeRouter from './api/routes/route.routes.js'
+import feedbackRouter from './api/routes/feedback.routes.js';
 
 app.use('/api/users',userRouter);
 app.use('/api/bus', busRouter);
 app.use('/api/route', routeRouter);
+app.use("/api/feedback", feedbackRouter);
 
 
 export { app };
