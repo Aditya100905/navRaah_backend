@@ -2,7 +2,7 @@ import express from 'express'
 import busController from '../controllers/bus.controller.js'
 
 const router = express.Router();
-console.log(busController);
+console.log("Bus Controller Methods:",busController);
 
 router.post('/', busController.addBus);
 router.put('/:id', busController.updateBus);

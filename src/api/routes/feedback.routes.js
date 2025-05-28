@@ -3,6 +3,7 @@ import feedbackController from "../controllers/feedback.controller.js";
 import  {validateJWT}  from "../middlewares/auth.middlewares.js";
 
 const router = express.Router();
+console.log("Feedback Controller Methods:", feedbackController);
 
 router.post("/add", validateJWT, feedbackController.addFeedback);
 router.get("/", feedbackController.getFeedbacks);

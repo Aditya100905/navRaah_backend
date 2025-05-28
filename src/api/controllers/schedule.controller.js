@@ -1,4 +1,4 @@
-import { Schedule } from "../models/schedule.model";
+import { Schedule } from "../models/schedule.model.js";
 
 const scheduleController = {
 
