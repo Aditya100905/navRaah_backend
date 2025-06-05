@@ -1,4 +1,4 @@
-import { UserBus } from "../models/userBus.model";
+import { UserBus } from "../models/userBus.model.js";
 
 const userBusControllers = {
 

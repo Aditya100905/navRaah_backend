@@ -2,7 +2,7 @@ import express from 'express'
 import routeController from '../controllers/route.controller.js'
 
 const router = express.Router();
-console.log(routeController);
+console.log("Route Controller Methods:",routeController);
 
 router.post('/', routeController.addRoute);
 router.put('/:id', routeController.updateRoute);
