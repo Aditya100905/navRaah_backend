@@ -34,8 +34,10 @@ import routeRouter from './api/routes/route.routes.js'
 import feedbackRouter from './api/routes/feedback.routes.js';
 import scheduleRouter from './api/routes/schedule.routes.js';
 import userBusRouter from './api/routes/userBus.routes.js';
+import stopRouter from './api/routes/stop.routes.js';
 
 
+app.use('/api/stop', stopRouter);
 app.use('/api/users',userRouter);
 app.use('/api/bus', busRouter);
 app.use('/api/route', routeRouter);
