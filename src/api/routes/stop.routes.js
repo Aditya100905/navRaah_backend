@@ -3,10 +3,15 @@ import stopController from "../controllers/stop.controller.js"
 import { validateJWT } from '../middlewares/auth.middlewares.js';
 const router = express.Router();
 
-router.post('/add', validateJWT, stopController.addStop);
-router.put('/update/:id', validateJWT, stopController.updateStop);
+console.log("Stop Controller Methods:",stopController);
+
+// Protected Routes
+router.post('/', validateJWT, stopController.addStop);
+router.put('/:id', validateJWT, stopController.updateStop);
+router.delete('/:id', validateJWT, stopController.deleteStop);
+
+// Public Routes
 router.get('/', stopController.getStops);
 router.get('/:id', stopController.getStopById);
-router.delete('/:id', validateJWT, stopController.deleteStop);
 
 export default router;
