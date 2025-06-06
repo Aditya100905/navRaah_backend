@@ -9,7 +9,7 @@ console.log("Schedule Controller Methods:", scheduleController);
 router.get("/", scheduleController.getAllSchedules);
 router.get("/bus/:busId", scheduleController.getScheduleByBus);
 router.get("/route/:routeId", scheduleController.getScheduleByRoute);
-router.post("/schedule/:scheduleId", scheduleController.getScheduleById);
+router.post("/:scheduleId", scheduleController.getScheduleById);
 router.get("/bus/:busId/route/:routeId", scheduleController.getSchedulesByBusAndRoute);
 
 // PROTECTED ROUTES
