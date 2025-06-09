@@ -3,7 +3,7 @@ import { Bus } from '../models/bus.model.js'
 const busController = {
     addBus: async (req, res) => {
         try {
-            const { busNo, capacity, status } = req.body;
+            const { busNo, capacity, status, startJourney } = req.body;
             //status - optional because default is set as active
             if (!busNo || !capacity) {
                 return res.status(400).json({
@@ -42,7 +42,7 @@ const busController = {
     updateBus: async (req, res) => {
         try {
             const busId = req.params.id;
-            const { busNo, capacity, status } = req.body;
+            const { busNo, capacity, status,startJourney } = req.body;
 
             // busId provided or not
             if (!busId) {
@@ -65,6 +65,7 @@ const busController = {
             if (busNo !== undefined) bus.busNo = busNo;
             if (capacity !== undefined) bus.capacity = capacity;
             if (status !== undefined) bus.status = status;
+            if (startJourney !== undefined) bus.startJourney = startJourney;
 
             await bus.save();
 
