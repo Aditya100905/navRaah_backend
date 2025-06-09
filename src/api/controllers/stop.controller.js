@@ -3,9 +3,9 @@ import { Stop } from "../models/stop.model.js";
 const stopController = {
     addStop: async (req, res) => {
         try {
-            const { name, latitude, longitude } = req.body;
+            const { name, latitude, longitude, tentativeArrivalTime, actualArrivalTime } = req.body;
 
-            if (!name || !latitude || !longitude) {
+            if (!name || !latitude || !longitude || !tentativeArrivalTime || !actualArrivalTime) {
                 return res.status(400).json({
                     success: false,
                     message: "All fields are required"
@@ -21,7 +21,9 @@ const stopController = {
             const newStop = new Stop({
                 name,
                 latitude,
-                longitude
+                longitude,
+                tentativeArrivalTime: new Date(tentativeArrivalTime),
+                actualArrivalTime: new Date(actualArrivalTime)
             });
 
             await newStop.save();
@@ -42,8 +44,8 @@ const stopController = {
     updateStop: async (req, res) => {
         try {
             const stopId = req.params.id;
-            const { name, latitude, longitude } = req.body;
-            if (!name || !latitude || !longitude) {
+            const { name, latitude, longitude, tentativeArrivalTime, actualArrivalTime } = req.body;
+            if (!name || !latitude || !longitude || !tentativeArrivalTime || !actualArrivalTime) {
             return res.status(400).json({   
                 success: false,
                 message: "All fields are required"
@@ -60,7 +62,7 @@ const stopController = {
 
             const updatedStop = await Stop.findByIdAndUpdate(
                 stopId,
-                { name, latitude, longitude },
+                { name, latitude, longitude, tentativeArrivalTime: new Date(tentativeArrivalTime), actualArrivalTime: new Date(actualArrivalTime) },
                 { new: true, runValidators: true }  
             )
             if (!updatedStop) {
@@ -166,7 +168,47 @@ const stopController = {
                 message: "Failed to retrieve stop. Try Again!"
             });
         }
+    },
+    updateActualArrivalTime: async (req, res) => {
+        try {
+            const stopId = req.params.id;
+            const { actualArrivalTime } = req.body;
+
+            if (!stopId || !actualArrivalTime) {
+                return res.status(400).json({
+                    success: false,
+                    message: "stopId and actualArrivalTime are required"
+                });
+            }
+
+            const updatedStop = await Stop.findByIdAndUpdate(
+                stopId,
+                { actualArrivalTime: new Date(actualArrivalTime) },
+                { new: true, runValidators: true }
+            );
+
+            if (!updatedStop) {
+                return res.status(404).json({
+                    success: false,
+                    message: "Stop not found"
+                });
+            }
+
+            return res.status(200).json({
+                success: true,
+                message: "Actual arrival time updated successfully!",
+                data: updatedStop
+            });
+
+        } catch (err) {
+            console.log("Error updating actual arrival time: ", err);
+            return res.status(500).json({
+                success: false,
+                message: "Failed to update actual arrival time. Try Again!"
+            });
+        }
     }
+
 };
 
 export default stopController

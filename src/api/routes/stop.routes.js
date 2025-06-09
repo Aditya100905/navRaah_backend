@@ -8,5 +8,6 @@ router.put('/update/:id', validateJWT, stopController.updateStop);
 router.get('/', stopController.getStops);
 router.get('/:id', stopController.getStopById);
 router.delete('/:id', validateJWT, stopController.deleteStop);
+router.patch('/:id/actual-time', stopController.updateActualArrivalTime);
 
 export default router;
