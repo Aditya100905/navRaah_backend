@@ -15,6 +15,14 @@ const stopSchema = new Schema(
             type: String,
             required: true,
         },
+        tentativeArrivalTime: {
+            type: Date,
+            required: false,
+        },
+        actualArrivalTime: {
+            type: Date,
+            required: false,
+        },
     },
     {
         timestamps: true,

@@ -9,6 +9,7 @@ console.log("Stop Controller Methods:",stopController);
 router.post('/', validateJWT, stopController.addStop);
 router.put('/:id', validateJWT, stopController.updateStop);
 router.delete('/:id', validateJWT, stopController.deleteStop);
+router.patch('/:id/actual-time', stopController.updateActualArrivalTime);
 
 // Public Routes
 router.get('/', stopController.getStops);
