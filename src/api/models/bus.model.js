@@ -12,6 +12,10 @@ const busSchema = new Schema(
             required: true,
             min: 1
         },
+        startJourney:{
+            type: Boolean,
+            default: false
+        },
         status: {
             type: Boolean,
             default: true
