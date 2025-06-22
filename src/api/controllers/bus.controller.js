@@ -95,7 +95,7 @@ const busController = {
 
             const deletedBus = await Bus.findByIdAndDelete(busId);
             //validation
-            if(deletedBus){
+            if(!deletedBus){
                 return res.status(404).json({
                     success:false,
                     message: "Bus not found with the provided busId"
